@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Client Tipo Pago</title>
+    </h:head>
+    <h:body>
+         <h1><h:outputLabel value="Tipo Pago"/></h1>
+        <h:form id="rango">
+           
+            <p:commandButton value="Ver Rango" actionListener="#{tipoPagoBean.btnRangeHandler}" update=":table, datos"/>
+        </h:form>
+        <h:form id="table">
+            <p:dataTable var="scl" id="TipoPago" value="#{tipoPagoBean.lista}" rowKey="#{su.idTipoPago}"
+                         selectionMode="single" selection="#{tipoPagoBean.selectTipoPago}" paginator="true" rows="5" paginatorPosition="bottom">
+                <f:facet name="header">
+                    <h:outputText value="Caracteristica de Sucursal"/>
+                </f:facet>
+                <p:column headerText="ID">
+                    <h:outputText value="#{scl.idTipoPago}" />
+                </p:column>
+                <p:column headerText="Sucursal">
+                    <h:outputText value="#{scl.tipoPago}"/>
+                </p:column>
+                <p:column headerText="Direccion">
+                    <h:outputText value="#{scl.descripcion}" />
+                </p:column>
+                
+                <p:column headerText="Activo">
+                    <h:outputText value="#{scl.activo?'Activo':'Inactivo'}" />
+                </p:column>
+                <p:ajax event="rowSelect" oncomplete="PF('salaSucursalDL').show();" listener="#{sucursalBean.salasSucursal}" update="table, :datos, salas"/>
+            </p:dataTable>
+        </h:form>
+        <h:form id="datos">
+            <p:messages id="mensajes" showDetail="true" closable="true" >
+               
+            </p:messages>
+            <h:panelGrid columns="2">
+                <p:outputLabel value="ID:" for="idSala"/>
+                <p:inputText id="idSala" value="#{tipoPagoBean.id}" required="false"/>
+                <p:outputLabel value="Nombre:"/>
+                <p:inputText value="#{tipoPagoBean.tipopago}"/>
+                <p:outputLabel value="Descripcion:"/>
+                <p:inputTextarea value="#{tipoPagoBean.descripcion}"/>
+    
+                <p:outputLabel value="Activo:"/>
+                <p:selectBooleanCheckbox value="#{tipoPagoBean.activo}" />
+            </h:panelGrid>
+            <p:commandButton value="Nuevo" update=":table, datos" actionListener="#{tipoPagoBean.btnAgregarHandler}"/>
+            <p:commandButton value="Cancelar" update=":table, datos" actionListener="#{tipoPagoBean.btnCancelarHandler}"/>
+        </h:form>
+        <h:form id="salas">
+            <p:dialog header="Pago por tipo de Pago" widgetVar="pttlDL" modal="true">
+                <p:dataTable var="sala" id="Sala" value="#{tipoPagoBean.selectTipoPago}">
+
+                    <p:column headerText="ID">
+                        <h:outputText value="#{pago.idPago}" />
+                    </p:column>
+                    <p:column headerText="Sucursal">
+                        <h:outputText value="#{pago.nombre}"/>
+                    </p:column>
+                </p:dataTable>
+            </p:dialog>
+        </h:form>
+    </h:body>
+</html>
+
